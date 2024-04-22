@@ -1,11 +1,16 @@
-import { collectMountedFiles } from '@/lib/files';
+import { getUnprocessedFiles } from '@/lib/files';
 import Link from 'next/link';
 import { FaSearch } from 'react-icons/fa';
 
 export default async function Home() {
-  const unprocessedFileCount = 17;
+  const [
+    unprocessedFiles,
+  ] = await Promise.all([
+    getUnprocessedFiles(),
+  ]);
+  const unprocessedFileCount = unprocessedFiles.length;
+  const nextUnprocessedFile = unprocessedFiles[0];
   const recentFiles = new Array(5).fill(null);
-  const files = await collectMountedFiles();
 
   return (
     <main className="flex-1 p-4">
@@ -15,7 +20,7 @@ export default async function Home() {
             <p className="text-sm leading-6 text-gray-900">
               There are {unprocessedFileCount} unprocessed files found.
             </p>
-            <Link href="/process" className="flex-none rounded-full bg-gray-900 px-3.5 py-1 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">
+            <Link href={`/process?path=${nextUnprocessedFile?.fullPath}`} className="flex-none rounded-full bg-gray-900 px-3.5 py-1 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">
               Process Now
               &nbsp;
               &rarr;

@@ -1,8 +1,8 @@
-import type { FileSummary } from "@/types";
-import { readdir, stat, } from "fs/promises";
+import type { FileMetaDataCollection, FileSummary } from "@/lib/types";
+import { COLLECTION_PATH, BASE_DIR } from "@/lib/constants"
+import { readdir, stat, readFile, writeFile } from "fs/promises";
 import { join } from "path";
 
-const BASE_DIR = "/Users/mattalui/Development/projects/mattadata/fake-shared"
 export const collectMountedFiles = async (
   dir = BASE_DIR,
   recursive = true,
@@ -34,4 +34,34 @@ export const collectMountedFiles = async (
   }
 
   return dirsWithMeta;
+}
+
+export const readMetaCollection = async (): Promise<FileMetaDataCollection> => {
+  try {
+    return JSON.parse(await readFile(COLLECTION_PATH, { encoding: "utf8" }));
+  } catch (e) {
+    return {};
+  }
+}
+
+export const updateMetaCollection = async (
+  updates: FileMetaDataCollection
+): Promise<FileMetaDataCollection> => {
+  const collection = await readMetaCollection();
+  Object.assign(collection, updates);
+  await writeFile(COLLECTION_PATH, JSON.stringify(collection));
+
+  return collection;
+}
+
+export const getUnprocessedFiles = async (): Promise<FileSummary[]> => {
+  const [
+    files,
+    collection
+  ] = await Promise.all([
+    collectMountedFiles(),
+    readMetaCollection(),
+  ]);
+
+  return files.filter((file) => !collection[file.fullPath]);
 }

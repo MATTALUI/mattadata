@@ -13,7 +13,7 @@ export type FileMetaData = {
   /** The user-assigned Mattadata name */
   name: string;
   /** A user writtedn description of the file */
-  desription: string;
+  description: string;
   /** A searchable composite string that can be indexed and easy to search */
   search: string;
   /** A key-value set of data that the user can set to capture additional information */
