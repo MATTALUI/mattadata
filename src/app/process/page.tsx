@@ -1,12 +1,10 @@
+import type { INextPageProps } from "@/lib/types";
 import { getUnprocessedFiles } from '@/lib/files';
 import { redirect } from 'next/navigation'
-interface IProcessPageProps {
-  // These come from nextjs so I am just guessing on the type
-  searchParams: { path?: string };
-}
+
 export default async function ProcessPage({
   searchParams
-}: IProcessPageProps) {
+}: INextPageProps) {
   const [
     unprocessedFiles
   ] = await Promise.all([

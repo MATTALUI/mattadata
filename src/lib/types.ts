@@ -1,3 +1,8 @@
+export interface INextPageProps {
+  // These come from nextjs so I am just guessing on the type
+  searchParams: { path?: string };
+}
+
 export type FileSummary = {
   fullPath: string;
   type: "dir" | "file";

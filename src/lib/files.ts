@@ -7,18 +7,18 @@ export const collectMountedFiles = async (
   dir = BASE_DIR,
   recursive = true,
 ): Promise<FileSummary[]> => {
-  const fileStat = await stat(dir);
-  if (!fileStat.isDirectory()) return [{
+  const isDir = await checkIsDir(dir);
+  if (!isDir) return [{
     fullPath: dir,
     type: "file",
   }];
   const contents = await readdir(dir);
   const dirsWithMeta = await Promise.all(contents.map(async (localPath) => {
     const fullPath = join(dir, localPath);
-    const fileStat = await stat(fullPath);
+    const isDir = await checkIsDir(fullPath)
     const summary: FileSummary = {
       fullPath,
-      type: fileStat.isDirectory() ? "dir" : "file"
+      type: isDir ? "dir" : "file"
     }
 
     return summary;
@@ -65,3 +65,11 @@ export const getUnprocessedFiles = async (): Promise<FileSummary[]> => {
 
   return files.filter((file) => !collection[file.fullPath]);
 }
+export const checkIsDir = async (path: string) => {
+  const fileStat = await stat(path);
+
+  return fileStat.isDirectory();
+}
+
+export const calculatePathCrumbs = (path: string): string[] =>
+  path.replace(BASE_DIR, "").split("/").map(v => !!v ? v : "Root");
