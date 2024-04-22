@@ -1,6 +1,7 @@
 import { BASE_DIR } from "@/lib/constants";
 import { calculatePathCrumbs, collectMountedFiles, checkIsDir } from "@/lib/files";
 import { INextPageProps } from "@/lib/types";
+import FilePreview from "@/ui/FilePreview";
 import Link from "next/link";
 
 export default async function ExplorePage({
@@ -50,7 +51,7 @@ export default async function ExplorePage({
               </div>
             ))
           ) : (
-            <div>Show File Preview</div>
+            <FilePreview path={path} />
           )}
         </div>
       </div>
