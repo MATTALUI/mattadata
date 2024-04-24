@@ -8,6 +8,12 @@ export type FileSummary = {
   type: "dir" | "file";
 };
 
+export type RecentFile<DateType = Date> = {
+  fullPath: string;
+  name: string;
+  date: DateType;
+};
+
 export type FileMetaData = {
   /** The unique identifier for the file. This identifier is for MattaData */
   id: string;
